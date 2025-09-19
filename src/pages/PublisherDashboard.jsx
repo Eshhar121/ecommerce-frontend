@@ -1,102 +1,64 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import useAuth from '../hooks/useAuth'
-import AddProductForm from '../components/dashboard/publisher/AddProductForm'
-import ProductTable from '../components/dashboard/publisher/ProductTable'
-import ProductReviews from '../components/dashboard/publisher/ProductReviews'
-import EarningsReport from '../components/dashboard/publisher/EarningsReport'
-import SalesAnalytics from '../components/dashboard/publisher/SalesAnalytics'
-import PublisherProfile from '../components/dashboard/publisher/PublisherProfile'
-import PublisherOrders from '../components/dashboard/publisher/PublisherOrders'
-import ThemeToggle from '../components/ThemeToggle'
+import { useState } from 'react';
+import AddProductForm from '../components/dashboard/publisher/AddProductForm';
+import ProductTable from '../components/dashboard/publisher/ProductTable';
+import ProductReviews from '../components/dashboard/publisher/ProductReviews';
+import EarningsReport from '../components/dashboard/publisher/EarningsReport';
+import SalesAnalytics from '../components/dashboard/publisher/SalesAnalytics';
+import PublisherOrders from '../components/dashboard/publisher/PublisherOrders';
+import PublisherProfile from '../components/dashboard/publisher/PublisherProfile';
+import useAuth from '../hooks/useAuth';
+import ThemeToggle from '../components/ThemeToggle';
 
-const tabs = [
-  'Add Product',
-  'My Products',
-  'Reviews',
-  'Earnings',
-  'Analytics',
-  'Orders',
-  'Profile',
-]
+const PublisherDashboard = () => {
+  const [activeTab, setActiveTab] = useState('My Products');
+  const { logout } = useAuth();
 
-export default function PublisherDashboard() {
-  const { user, logout } = useAuth()
-  const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState('Add Product')
-
-  const renderTab = () => {
-    switch (activeTab) {
-      case 'Add Product':
-        return <AddProductForm />
-      case 'My Products':
-        return <ProductTable />
-      case 'Reviews':
-        return <ProductReviews />
-      case 'Earnings':
-        return <EarningsReport />
-      case 'Analytics':
-        return <SalesAnalytics />
-      case 'Orders':
-        return <PublisherOrders />
-      case 'Profile':
-        return <PublisherProfile />
-      default:
-        return null
-    }
-  }
-
-  const handleLogout = async () => {
-    await logout()
-    navigate('/login')
-  }
+  const tabComponents = {
+    'My Products': <ProductTable />,
+    'Add Product': <AddProductForm />,
+    'Product Reviews': <ProductReviews />,
+    'Earnings': <EarningsReport />,
+    'Analytics': <SalesAnalytics />,
+    'Orders': <PublisherOrders />,
+    'Profile': <PublisherProfile />,
+  };
 
   return (
-    
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white relative">
-      {/* Header section with logout and theme toggle */}
-      <div className="p-6 rounded mt-4 bg-white dark:bg-black text-black dark:text-white">
-  🌗 This box should flip between white/black when toggling the theme.
-</div>
-
-      <div className="flex justify-between items-center p-4 border-b border-gray-300 dark:border-gray-700">
-        <div>
-          <h1 className="text-2xl font-bold">📋 Publisher Dashboard</h1>
-          <p className="text-sm text-gray-600 dark:text-gray-300">
-            Welcome, {user?.name || 'Publisher'}!
-          </p>
+    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
+      <aside className="w-64 bg-white dark:bg-gray-800 shadow-md">
+        <div className="p-4">
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Publisher Panel</h1>
         </div>
-        <div className="flex items-center gap-2">
+        <nav className="mt-4">
+          {Object.keys(tabComponents).map((tabName) => (
+            <button
+              key={tabName}
+              onClick={() => setActiveTab(tabName)}
+              className={`w-full text-left py-2.5 px-4 text-sm font-medium transition-colors duration-200 ${ 
+                activeTab === tabName 
+                ? 'bg-blue-500 text-white' 
+                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+              }`}>
+              {tabName}
+            </button>
+          ))}
+        </nav>
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700 mt-auto">
           <ThemeToggle />
           <button
-            onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm"
+            onClick={logout}
+            className="w-full text-left py-2.5 px-4 text-sm font-medium text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900 transition-colors duration-200 mt-4"
           >
             Logout
           </button>
         </div>
-      </div>
+      </aside>
 
-      {/* Tab Navigation */}
-      <div className="flex flex-wrap gap-2 p-4">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 rounded font-medium transition-colors duration-150 ${activeTab === tab
-                ? 'bg-indigo-600 text-white'
-                : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-sm'
-              }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* Active Tab Content */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded shadow mx-4 mb-8">
-        {renderTab()}
-      </div>
+      <main className="flex-1 p-6">
+        {tabComponents[activeTab]}
+      </main>
     </div>
-  )
-}
+  );
+};
+
+export default PublisherDashboard;

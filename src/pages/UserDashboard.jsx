@@ -1,85 +1,64 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import useAuth from '../hooks/useAuth'
-import ThemeToggle from '../components/ThemeToggle'
+import { useState } from 'react';
+import UserProfile from '../components/dashboard/user/UserProfile';
+import UserOrders from '../components/dashboard/user/UserOrders';
+import UserWishlist from '../components/dashboard/user/UserWishlist';
+import UserReviews from '../components/dashboard/user/UserReviews';
+import BecomePublisherCard from '../components/dashboard/user/BecomePublisherCard';
+import useAuth from '../hooks/useAuth';
+import ThemeToggle from '../components/ThemeToggle';
 
-// Tab Components
-import UserOrders from '../components/dashboard/user/UserOrders'
-import UserReviews from '../components/dashboard/user/UserReviews'
-import UserWishlist from '../components/dashboard/user/UserWishlist'
-import UserProfile from '../components/dashboard/user/UserProfile'
-import BecomePublisherCard from '../components/dashboard/user/BecomePublisherCard'
+const UserDashboard = () => {
+  const { user, logout } = useAuth();
+  const [activeTab, setActiveTab] = useState('Profile');
 
-const tabs = ['My Orders', 'My Reviews', 'My Wishlist', 'Profile']
+  const tabs = {
+    Profile: <UserProfile />,
+    Orders: <UserOrders />,
+    Wishlist: <UserWishlist />,
+    Reviews: <UserReviews />,
+  };
 
-export default function UserDashboard() {
-  const { user, logout } = useAuth()
-  const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState('My Orders')
-
-  const handleLogout = async () => {
-    await logout()
-    navigate('/login')
-  }
-
-  const renderTab = () => {
-    switch (activeTab) {
-      case 'My Orders':
-        return <UserOrders />
-      case 'My Reviews':
-        return <UserReviews />
-      case 'My Wishlist':
-        return <UserWishlist />
-      case 'Profile':
-        return <UserProfile />
-      default:
-        return null
-    }
+  // Conditionally add the 'Become Publisher' tab
+  if (user && user.role !== 'publisher' && user.role !== 'admin') {
+    tabs['Become Publisher'] = <BecomePublisherCard />;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
-      {/* Header */}
-      <div className="flex justify-between items-center p-4 border-b border-gray-300 dark:border-gray-700">
-        <div>
-          <h1 className="text-2xl font-bold">🧍 User Dashboard</h1>
-          <p className="text-sm text-gray-600 dark:text-gray-300">
-            Welcome, {user?.name || 'User'}!
-          </p>
+    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
+      <aside className="w-64 bg-white dark:bg-gray-800 shadow-md">
+        <div className="p-4">
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">My Account</h1>
         </div>
-        <div className="flex items-center gap-2">
+        <nav className="mt-4">
+          {Object.keys(tabs).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`w-full text-left py-2.5 px-4 text-sm font-medium transition-colors duration-200 ${ 
+                activeTab === tab 
+                ? 'bg-blue-500 text-white' 
+                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+              }`}>
+              {tab}
+            </button>
+          ))}
+        </nav>
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700 mt-auto">
           <ThemeToggle />
           <button
-            onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm"
+            onClick={logout}
+            className="w-full text-left py-2.5 px-4 text-sm font-medium text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900 transition-colors duration-200 mt-4"
           >
             Logout
           </button>
         </div>
-      </div>
+      </aside>
 
-      {/* Tabs */}
-      <div className="flex flex-wrap gap-2 p-4">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 rounded font-medium transition-colors duration-150 ${
-              activeTab === tab
-                ? 'bg-indigo-600 text-white'
-                : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-sm'
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* Content */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded shadow mx-4 mb-8 space-y-6">
-        {user?.role === 'user' && <BecomePublisherCard />}
-        {renderTab()}
-      </div>
+      <main className="flex-1 p-6">
+        {tabs[activeTab]}
+      </main>
     </div>
-  )
-}
+  );
+};
+
+export default UserDashboard;

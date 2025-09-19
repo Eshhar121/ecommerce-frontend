@@ -9,8 +9,10 @@ export function AuthProvider({ children }) {
     const fetchUser = async () => {
         try {
             const res = await authAPI.getCurrentUser();
-            setUser(res.user)
+            setUser(res.data.user);
+            return res.data.user;
         } catch (err) {
+            console.error('Error fetching user:', err);
             setUser(null)
         } finally {
             setLoading(false)
@@ -25,8 +27,7 @@ export function AuthProvider({ children }) {
         const res = await authAPI.login(credentials);
         await fetchUser();
         return res;
-      };
-      
+    };
 
     const logout = async () => {
         try {

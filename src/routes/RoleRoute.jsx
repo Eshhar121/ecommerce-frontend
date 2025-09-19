@@ -7,7 +7,7 @@ export default function RoleRoute({ children, role }) {
 
     if (!user) return <Navigate to="/login" />
 
-    if (user.role !== role) return <Navigate to="/dashboard/user" />
+    if (user.role !== role) return <Navigate to={`/dashboard/user`} />
 
     return children
 }

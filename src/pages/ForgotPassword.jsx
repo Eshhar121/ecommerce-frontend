@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { sendResetEmail } from '../services/authAPI'
+import { forgotPassword } from '../services/authAPI'
 import toast from 'react-hot-toast'
 
 export default function ForgotPassword() {
@@ -10,7 +10,7 @@ export default function ForgotPassword() {
         e.preventDefault()
         setLoading(true)
         try {
-            const res = await sendResetEmail(email)
+            const res = await forgotPassword(email)
             toast.success(res?.data?.message || 'Reset link sent successfully! Please check the mail')
         } catch (err) {
             toast.error(err?.response?.statusText || 'Failed to send reset link 2')
