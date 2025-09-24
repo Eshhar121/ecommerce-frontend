@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import axios from '../services/axios'
+import { verifyEmail } from '../services/authAPI'
 
 export default function VerifyEmail() {
     const { token } = useParams()
@@ -15,7 +15,7 @@ export default function VerifyEmail() {
 
         const verify = async () => {
             try {
-                const res = await axios.get(`/auth/verify-email/${token}`)
+                const res = await verifyEmail(token)
                 toast.success(res.data.message || 'Email verified!')
                 setStatus('success')
                 setTimeout(() => navigate('/login'), 2500)

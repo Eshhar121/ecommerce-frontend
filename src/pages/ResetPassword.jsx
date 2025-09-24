@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import axios from '../services/axios'
+import { resetPassword } from '../services/authAPI'
 
 export default function ResetPassword() {
     const { token } = useParams()
@@ -24,9 +24,7 @@ export default function ResetPassword() {
         setError('')
         
         try {
-            const res = await axios.post(`/auth/reset-password/${token}`, {
-                password: form.password,
-            })
+            const res = await resetPassword(token, form.password)
 
             if (res?.status === 200) {
                 toast.success(res.data.message || 'Password reset successful!')

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getProducts, updateProduct, deleteProduct } from '../../../services/productAPI';
+import { getAllProducts, updateProduct, deleteProduct } from '../../../services/adminAPI';
 import toast from 'react-hot-toast';
 import Modal from '../../shared/Modal';
 
@@ -16,8 +16,8 @@ export default function ManageProducts() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await getProducts();
-      setProducts(response.data || []);
+      const response = await getAllProducts();
+      setProducts(response.data.products || []);
     } catch (err) {
       setError('Failed to fetch products. Please try again later.');
       toast.error('Failed to fetch products.');
@@ -81,7 +81,7 @@ export default function ManageProducts() {
           <thead className="bg-gray-200 dark:bg-gray-700">
             <tr>
               <th className="py-3 px-6 text-left text-gray-600 dark:text-gray-300">Title</th>
-              <th className="py-3 px-6 text-left text-gray-600 dark:text-gray-300">Author</th>
+              <th className="py-3 px-6 text-left text-gray-600 dark:text-gray-300">Category</th>
               <th className="py-3 px-6 text-center text-gray-600 dark:text-gray-300">Price</th>
               <th className="py-3 px-6 text-center text-gray-600 dark:text-gray-300">Stock</th>
               <th className="py-3 px-6 text-center text-gray-600 dark:text-gray-300">Actions</th>
@@ -91,8 +91,8 @@ export default function ManageProducts() {
             {products.length > 0 ? (
               products.map((product) => (
                 <tr key={product._id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600">
-                  <td className="py-3 px-6 text-left whitespace-nowrap">{product.title || 'N/A'}</td>
-                  <td className="py-3 px-6 text-left">{product.author || 'N/A'}</td>
+                  <td className="py-3 px-6 text-left whitespace-nowrap">{product.name || 'N/A'}</td>
+                  <td className="py-3 px-6 text-left">{product.category || 'N/A'}</td>
                   <td className="py-3 px-6 text-center">${product.price?.toFixed(2) || '0.00'}</td>
                   <td className="py-3 px-6 text-center">{product.stock || 0}</td>
                   <td className="py-3 px-6 text-center">

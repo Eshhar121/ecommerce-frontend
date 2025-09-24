@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getProductStats } from '../../../services/productAPI';
+import { getOverviewStats } from '../../../services/adminAPI';
 // import { getUserStats } from '../../../services/userAPI'; // Example
 // import { getOrderStats } from '../../../services/orderAPI'; // Example
 import toast from 'react-hot-toast';
@@ -28,16 +28,15 @@ export default function AdminStats() {
       try {
         setLoading(true);
         // Fetch all stats in parallel
-        const [productStatsRes] = await Promise.all([
-          getProductStats(),
-          // Promise.resolve({ data: { totalUsers: 150 } }), // Placeholder for user stats
-          // Promise.resolve({ data: { totalOrders: 45, totalRevenue: 9800 } }) // Placeholder for order stats
+        const [overviewStatsRes] = await Promise.all([
+          getOverviewStats(),
         ]);
 
         setStats({
-          products: productStatsRes.data,
-          // users: userStatsRes.data,
-          // orders: orderStatsRes.data
+          users: overviewStatsRes.data.users,
+          products: overviewStatsRes.data.products,
+          orders: overviewStatsRes.data.orders,
+          revenue: overviewStatsRes.data.revenue,
         });
         setError(null);
       } catch (err) {
@@ -67,23 +66,24 @@ export default function AdminStats() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <StatCard 
             title="Total Products" 
-            value={stats.products?.totalProducts || 0} 
+            value={stats.products || 0} 
             icon={<span>📊</span>}
           />
           <StatCard 
-            title="Products Out of Stock" 
-            value={stats.products?.productsOutOfStock || 0} 
-            icon={<span>📊</span>}
+            title="Total Users" 
+            value={stats.users || 0} 
+            icon={<span>📈</span>} 
           />
           <StatCard 
-            title="Total Categories" 
-            value={stats.products?.totalCategories || 0} 
-            icon={<span>📊</span>}
+            title="Total Orders" 
+            value={stats.orders || 0} 
+            icon={<span>📈</span>} 
           />
-          {/* Example placeholder cards for other stats */}
-          <StatCard title="Total Users" value="150" icon={<span>📈</span>} />
-          <StatCard title="Total Orders" value="45" icon={<span>📈</span>} />
-          <StatCard title="Total Revenue" value="$9,800" icon={<span>📈</span>} />
+          <StatCard 
+            title="Total Revenue" 
+            value={`$${stats.revenue || 0}`} 
+            icon={<span>📈</span>} 
+          />
         </div>
       ) : (
         <div className="text-center p-4">No statistics available.</div>

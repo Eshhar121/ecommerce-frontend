@@ -81,8 +81,4 @@ export const deleteReview = (reviewId) => api.delete(`/reviews/${reviewId}`);
  */
 export const getProductReviews = (productId) => api.get(`/reviews/${productId}`);
 
-/**
- * Fetches product statistics (admin only).
- * @returns {Promise} Axios response promise.
- */
-export const getProductStats = () => api.get('/products/stats');
+
