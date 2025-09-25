@@ -1,32 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { getProducts } from '../services/productAPI';
 import { Menu, X, Star, Shield, Truck, Award } from 'lucide-react';
 
 const Home = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [products, setProducts] = useState([]);
 
-    const featuredProducts = [
-        {
-            id: 1,
-            name: "Premium Wireless Headphones",
-            price: "$299",
-            image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop&crop=center",
-            originalPrice: "$399"
-        },
-        {
-            id: 2,
-            name: "Smart Fitness Watch",
-            price: "$199",
-            image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop&crop=center",
-            originalPrice: "$249"
-        },
-        {
-            id: 3,
-            name: "Minimalist Laptop Stand",
-            price: "$89",
-            image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=400&fit=crop&crop=center",
-            originalPrice: "$119"
-        }
-    ];
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await getProducts();
+                setProducts(response.data.products);
+            } catch (error) {
+                console.error('Failed to fetch products', error);
+            }
+        };
+
+        fetchProducts();
+    }, []);
 
     const testimonials = [
         {
@@ -76,6 +68,9 @@ const Home = () => {
                                 <a href="/products" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
                                     Products
                                 </a>
+                                <a href="/cart" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
+                                    Cart
+                                </a>
                                 <a href="/login" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
                                     Login
                                 </a>
@@ -103,6 +98,9 @@ const Home = () => {
                             </a>
                             <a href="#" className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium">
                                 Products
+                            </a>
+                            <a href="/cart" className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium">
+                                Cart
                             </a>
                             <a href="/login" className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium">
                                 Login
@@ -175,42 +173,42 @@ const Home = () => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {featuredProducts.length === 0 ? (
+                        {products.length === 0 ? (
                             <div className="col-span-full text-center text-gray-500 text-lg">
                                 No featured products available.
                             </div>
                         ) : (
-                            featuredProducts.map((product) => (
-                                <div
-                                    key={product.id}
-                                    className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group"
-                                >
-                                    <div className="relative overflow-hidden">
-                                        <img
-                                            src={product.image}
-                                            alt={product.name}
-                                            className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                                        />
-                                        <div className="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-semibold">
-                                            Sale
+                            products.map((product) => (
+                                <Link to={`/product/${product._id}`} key={product._id}>
+                                    <div
+                                        className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group"
+                                    >
+                                        <div className="relative overflow-hidden">
+                                            <img
+                                                src={product.image}
+                                                alt={product.name}
+                                                className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                                            />
+                                            <div className="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-semibold">
+                                                Sale
+                                            </div>
+                                        </div>
+                                        <div className="p-6">
+                                            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                                                {product.name}
+                                            </h3>
+                                            <div className="flex items-center space-x-2 mb-4">
+                                                <span className="text-2xl font-bold text-gray-900">${product.price}</span>
+                                            </div>
+                                            <div className="flex items-center mb-4">
+                                                {[...Array(5)].map((_, i) => (
+                                                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                                                ))}
+                                                <span className="ml-2 text-gray-600 text-sm">(4.5)</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="p-6">
-                                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                                            {product.name}
-                                        </h3>
-                                        <div className="flex items-center space-x-2 mb-4">
-                                            <span className="text-2xl font-bold text-gray-900">{product.price}</span>
-                                            <span className="text-lg text-gray-500 line-through">{product.originalPrice}</span>
-                                        </div>
-                                        <div className="flex items-center mb-4">
-                                            {[...Array(5)].map((_, i) => (
-                                                <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                                            ))}
-                                            <span className="ml-2 text-gray-600 text-sm">(4.5)</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                </Link>
                             ))
                         )}
                     </div>

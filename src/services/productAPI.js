@@ -4,7 +4,7 @@ import api from './axios';
  * Fetches a list of all products.
  * @returns {Promise} Axios response promise.
  */
-export const getProducts = () => api.get('/products');
+export const getProducts = (searchQuery = '') => api.get(`/products?search=${searchQuery}`);
 
 /**
  * Fetches a list of all products for the current publisher.
@@ -80,5 +80,12 @@ export const deleteReview = (reviewId) => api.delete(`/reviews/${reviewId}`);
  * @returns {Promise} Axios response promise.
  */
 export const getProductReviews = (productId) => api.get(`/reviews/${productId}`);
+
+/**
+ * Fetches a single product by its ID.
+ * @param {string} productId - The ID of the product.
+ * @returns {Promise} Axios response promise.
+ */
+export const getProductById = (productId) => api.get(`/products/${productId}`);
 
 

@@ -1,17 +1,12 @@
 import api from './axios';
 
-/**
- * Places a new order.
- * @param {object} orderData - The data for the order.
- * @returns {Promise} Axios response promise.
- */
-export const placeOrder = (orderData) => api.post('/orders/place', orderData);
+export const placeOrder = () => api.post('/orders');
 
 /**
  * Fetches the current user's orders.
  * @returns {Promise} Axios response promise.
  */
-export const getMyOrders = () => api.get('/orders/my');
+export const getMyOrders = () => api.get('/orders');
 
 /**
  * Fetches all orders (admin only).
@@ -39,3 +34,11 @@ export const createCheckoutSession = (orderItems) => api.post('/payment/create-c
  * @returns {Promise} Axios response promise.
  */
 export const markOrderAsPaid = (orderId) => api.put(`/payment/${orderId}/pay`);
+
+/**
+ * Updates the status of an order (admin only).
+ * @param {string} orderId - The ID of the order.
+ * @param {string} status - The new status of the order.
+ * @returns {Promise} Axios response promise.
+ */
+export const updateOrderStatus = (orderId, status) => api.patch(`/orders/${orderId}/status`, { status });

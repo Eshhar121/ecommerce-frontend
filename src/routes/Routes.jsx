@@ -10,11 +10,31 @@ import ResetPassword from '../pages/ResetPassword'
 import AdminDashboard from '../pages/AdminDashboard'
 import PublisherDashboard from '../pages/PublisherDashboard'
 import UserDashboard from '../pages/UserDashboard'
+import ProductPage from '../pages/ProductPage'
+import CartPage from '../pages/CartPage'
+import CheckoutPage from '../pages/CheckoutPage'
+import ProductsPage from '../pages/ProductsPage'
 
 export const appRoutes = [
     {
         path: '/',
         element: <Home />,
+    },
+    {
+        path: '/products',
+        element: <ProductsPage />,
+    },
+    {
+        path: '/product/:id',
+        element: <ProductPage />,
+    },
+    {
+        path: '/cart',
+        element: <CartPage />,
+    },
+    {
+        path: '/checkout',
+        element: <CheckoutPage />,
     },
     {
         path: '/login',

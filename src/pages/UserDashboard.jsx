@@ -6,6 +6,7 @@ import UserReviews from '../components/dashboard/user/UserReviews';
 import BecomePublisherCard from '../components/dashboard/user/BecomePublisherCard';
 import useAuth from '../hooks/useAuth';
 import ThemeToggle from '../components/ThemeToggle';
+import { Link } from 'react-router-dom';
 
 const UserDashboard = () => {
   const { user, logout } = useAuth();
@@ -42,6 +43,20 @@ const UserDashboard = () => {
               {tab}
             </button>
           ))}
+          <Link
+            to="/products"
+            className={`w-full block text-left py-2.5 px-4 text-sm font-medium transition-colors duration-200 mt-2 
+              text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700`}
+          >
+            Products
+          </Link>
+          <Link
+            to="/cart"
+            className={`w-full block text-left py-2.5 px-4 text-sm font-medium transition-colors duration-200 mt-2 
+              text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700`}
+          >
+            Cart
+          </Link>
         </nav>
         <div className="p-4 border-t border-gray-200 dark:border-gray-700 mt-auto">
           <ThemeToggle />

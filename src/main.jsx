@@ -1,16 +1,18 @@
 import './index.css'
 import './utils/chartConfig'
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import { AuthProvider } from './context/AuthProvider';
-import { Toaster } from 'react-hot-toast';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+import './index.css'
+import { AuthProvider } from './context/AuthProvider.jsx'
+import { SocketProvider } from './context/SocketProvider.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
-      <App />
-      <Toaster position="top-center" reverseOrder={false} />
+      <SocketProvider>
+        <App />
+      </SocketProvider>
     </AuthProvider>
-  </React.StrictMode>
-);
+  </React.StrictMode>,
+)

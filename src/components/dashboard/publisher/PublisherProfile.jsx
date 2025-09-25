@@ -65,7 +65,7 @@ export default function PublisherProfile() {
             />
           </div>
           <div>
-            <label htmlFor="bio" className="block mb-2 text-sm font-medium text-gray-900 dark:text-text-white">Biography / About Us</label>
+            <label htmlFor="bio" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Biography / About Us</label>
             <textarea 
               name="bio" 
               id="bio" 
